@@ -1,0 +1,355 @@
+#include<bits/stdc++.h>
+using namespace std;
+class BigNumber{
+		friend ostream&operator<<(ostream&, const BigNumber&);
+		friend istream& operator>>(istream& input, BigNumber&);
+	private:
+		static const int length = 100;
+		int number[length];
+	public:
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  sazande va mokhareb
+		BigNumber(){
+			for(int i = 0; i < length; i++){						
+				number[i] = 0;
+			}
+		}//////////////////////////////////////////////////////////////////////
+		BigNumber(const int& num){
+			for (int i = 0; i < length; i++)
+    			number[i] = 0;
+    		
+    		int tool = 1, _num=num, __num = 0;
+			for(; _num != 0; tool++){
+				_num /= 10;											
+			}
+			_num=num;
+			for (int j = length - 1; _num != 0; j--){
+				__num = _num % 10;
+        		number[j] = __num;
+        		_num /= 10;
+        	}
+		}//////////////////////////////////////////////////////////////////////
+		BigNumber(const char* num){
+			for (int i = 0; i < length; i++)
+    			number[i] = 0;
+
+   			int tool = strlen(num);                            
+
+			for (int j = 100 - tool, k = 0; j < length; j++, k++)
+      			if (isdigit(num[k]))
+        			number[j] = num[k] - '0';
+		}//////////////////////////////////////////////////////////////////////
+		~BigNumber(){}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  +
+		BigNumber operator+(const BigNumber& num)const{
+			BigNumber temp;
+			int carry = 0;
+			for ( int i = length - 1; i >= 0; i-- ){
+      			temp.number[ i ] = number[ i ] + num.number[ i ] + carry;
+			      if ( temp.number[ i ] > 9 ){
+			         temp.number[ i ] %= 10;
+			         carry = 1;
+			      } 
+			      else
+			         carry = 0;
+			}
+   			return temp;
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator+(const int& num)const{
+			return *this + BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator+(const char* num)const{
+			return *this + BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  -
+		BigNumber operator-(const BigNumber& num)const{
+			BigNumber temp;
+			int carry = 0;
+			for ( int i = length - 1; i >= 0; i-- ){
+      			temp.number[ i ] = number[ i ] - num.number[ i ] - carry;
+			      if ( temp.number[ i ] < 0 ){
+			         temp.number[ i ] += 10;
+			         carry = 1;
+			      } 
+			      else
+			         carry = 0;
+			}
+   			return temp;
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator-(const int& num)const{
+			return *this - BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator-(const char* num)const{
+			return *this - BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  *
+		BigNumber operator*(const BigNumber& num)const{
+			BigNumber temp, zero, _num = num;
+			for(; _num > zero; _num--){
+				temp+=*this;	
+			}
+			return temp;
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator*(const int& num)const{
+			return *this * BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator*(const char* num)const{
+			return *this * BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  /
+		BigNumber operator/(const BigNumber& num)const{
+			BigNumber temp, zero, _num1 = *this, _num2 = num;
+			for(; _num1 > _num2 && _num1 > zero; temp++){
+				_num1 -= _num2;	
+			}
+			temp++;
+			return temp;
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator/(const int& num)const{
+			return *this / BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		BigNumber operator/(const char* num)const{
+			return *this / BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// +=
+		const BigNumber& operator+=(const BigNumber& num){
+			int carry = 0;
+			for ( int i = length - 1; i >= 0; i-- ){
+      			number[ i ] = number[ i ] + num.number[ i ] + carry;
+			      if ( number[ i ] > 9 ){
+			         number[ i ] %= 10;
+			         carry = 1;
+			      } 
+			      else
+			         carry = 0;
+			}
+   			return *this;
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator+=(const int& num){
+			return *this += BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator+=(const char* num){
+			return *this += BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  -=
+		const BigNumber& operator-=(const BigNumber& num){
+			int carry = 0;
+			for ( int i = length - 1; i >= 0; i-- ){
+      			number[ i ] = number[ i ] - num.number[ i ] - carry;
+			      if ( number[ i ] < 0 ){
+			         number[ i ] += 10;
+			         carry = 1;
+			      } 
+			      else
+			         carry = 0;
+			}
+   			return *this;
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator-=(const int& num){
+			return *this -= BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator-=(const char *num){
+			return *this -= BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  *=
+		const BigNumber& operator*=(const BigNumber& num){
+			BigNumber temp, zero, _num = num;
+			for(; _num != zero; _num--){
+				temp+=*this;	
+			}
+			*this = temp;
+			return *this;	
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator*=(const int& num){
+			return *this *= BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator*=(const char *num){
+			return *this *= BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  /=
+		const BigNumber& operator/=(const BigNumber& num){
+			BigNumber temp, zero, _num1 = *this, _num2 = num;
+			for(; _num1 > _num2 && _num1 > zero; temp++){
+				_num1 -= _num2;	
+			}
+			temp++;
+			*this = temp;
+			return *this;
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator/=(const int& num){
+			return *this /= BigNumber(num);
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator/=(const char *num){
+			return *this /= BigNumber(num);
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  ++
+		const BigNumber operator++(int){
+			BigNumber num = *this;
+			for ( int i = length - 1; i >= 0; i-- ){
+			    if ( number[ i ] != 9 ){
+			    	number[ i ] += 1;
+			    	break;
+			    }
+				else
+					number[i] = 0; 
+			}
+			return num;
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator++(){
+			for ( int i = length - 1; i >= 0; i-- ){
+			    if ( number[ i ] != 9 ){
+			    	number[ i ] += 1;
+			    	break;
+			    }
+				else
+					number[i] = 0;  
+			}
+			return *this;
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  --
+		const BigNumber operator--(int){
+			BigNumber num = *this;
+			for ( int i = length - 1; i >= 0; i-- ){
+      			if ( number[ i ] != 0 ){
+			    	number[ i ] -= 1;
+			    	break;
+			    }
+				else
+					number[i] = 9;  
+			}
+			return num;
+		}
+		//////////////////////////////////////////////////////////////////////
+		const BigNumber& operator--(){
+			for ( int i = length - 1; i >= 0; i-- ){
+      			if ( number[ i ] != 0 ){
+			    	number[ i ] -= 1;
+			    	break;
+			    }
+				else
+					number[i] = 9;  
+			}
+			return *this;
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  moghayese
+		bool operator==(const BigNumber& num)const{
+			for(int i = 0; i < length; i++)
+				if(number[i] != num.number[i])
+					return 0;
+			return 1;
+		}
+		//////////////////////////////////////////////////////////////////////
+		bool operator!=(const BigNumber& num)const{
+			for(int i = 0; i < length; i++)
+				if(number[i] != num.number[i])
+					return 1;
+			return 0;
+		}
+		//////////////////////////////////////////////////////////////////////
+		bool operator<(const BigNumber& num)const{
+			for(int i = 0; i < length; i++){
+				if(number[i] != 0 || num.number[i] != 0){
+					if(number[i] < num.number[i])
+						return 1;
+				return 0;
+				}
+			}
+		}
+		//////////////////////////////////////////////////////////////////////
+		bool operator>(const BigNumber& num)const{
+			for(int i = 0; i < length; i++){
+				if(number[i] != 0 || num.number[i] != 0){
+					if(number[i] > num.number[i])
+						return 1;
+				return 0;
+				}
+			}
+		}
+		//////////////////////////////////////////////////////////////////////
+		bool operator<=(const BigNumber& num)const{
+			for(int i = 0; i < length; i++){
+				if(number[i] != 0 || num.number[i] != 0){
+					if(number[i] > num.number[i])
+						return 0;
+				return 1;
+				}
+			}
+		}
+		//////////////////////////////////////////////////////////////////////
+		bool operator>=(const BigNumber& num)const{
+			for(int i = 0; i < length; i++){
+				if(number[i] != 0 || num.number[i] != 0){
+					if(number[i] < num.number[i])
+						return 0;
+					return 1;
+				}
+			}
+		}
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  end class
+};
+const int BigNumber::length;
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  input & output
+ostream& operator<<(ostream& output, const BigNumber& num){
+   int i;
+   for (i = 0; (num.number[ i ] == 0) && (i < 100); i++);
+   if (i == 100)
+      output << 0;
+   else
+      for (; i < 100; i++)
+         output << num.number[ i ];
+   return output;
+}
+			//////////////////////////////////////////////////////////////////////
+istream& operator>>(istream& input, BigNumber& num){
+	int temp;
+	char _bignumber[100];
+	for (int i = 0; i < 100; i++)
+    			num.number[i] = 0;
+	input.get(_bignumber,100);
+	temp = strlen(_bignumber);                            
+
+	for (int j = 100 - temp, k = 0; j < 100; j++, k++)
+		num.number[j] = _bignumber[k] - '0';
+
+	return input;
+}		
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  main
+int main(){
+	BigNumber a("999999999999999999999");
+	BigNumber b(5);
+	BigNumber c;
+	BigNumber d("999999999999999999999");
+	cout<<"a="<< a <<endl<<"b="<< b <<endl<<"c="<< c <<endl<<endl;
+	c += a * 2 - b ;
+	cout<<"a="<< a <<endl<<"b="<< b <<endl<<"c="<< c <<endl<<endl;
+	c -= a/d;
+	cout<<"a="<< a <<endl<<"b="<< b <<endl<<"c="<< c <<endl<<endl;										//  mesal haye dr taheri
+	c -= a;
+	cout<<"a="<< a <<endl<<"b="<< b <<endl<<"c="<< c <<endl<<endl;
+	c = b--;
+	cout<<"a="<< a <<endl<<"b="<< b <<endl<<"c="<< c <<endl<<endl;
+	c = --b;
+	cout<<"a="<< a <<endl<<"b="<< b <<endl<<"c="<< c <<endl<<endl;
+	if (a == b)
+	cout<<"equal\n";
+	else
+	cout<<"Not equal\n";
+	return 0;
+}
+
